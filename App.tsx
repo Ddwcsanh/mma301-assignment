@@ -1,20 +1,62 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DetailsScreen from "./src/screens/DetailsScreen";
+import HomeNavigation from "./src/screens/HomeNavigation";
+import { NativeBaseProvider, Pressable, Text } from "native-base";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NativeBaseProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerTintColor: "black",
+            }}
+          >
+            <Stack.Screen
+              options={{
+                headerTitle: () => {
+                  const navigation = useNavigation();
+                  return (
+                    <Pressable
+                      onPress={() => {
+                        navigation.navigate("Home");
+                        navigation.setOptions({
+                          scrollToTopEnabled: true,
+                        });
+                      }}
+                    >
+                      <Text
+                        fontSize={"2xl"}
+                        fontWeight={"bold"}
+                        color={"tomato"}
+                        padding={2}
+                      >
+                        Watchap
+                      </Text>
+                    </Pressable>
+                  );
+                },
+                headerShadowVisible: false,
+              }}
+              name="HomeNavigation"
+              component={HomeNavigation}
+            />
+            <Stack.Screen
+              name="Details"
+              component={DetailsScreen}
+              options={{
+                headerShadowVisible: false,
+                headerBackTitleVisible: false,
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NativeBaseProvider>
+    </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
